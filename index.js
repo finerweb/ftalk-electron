@@ -14,14 +14,9 @@ const log = require('electron-log');
 const autoUpdate = require('./auto-updater');
 // auto inicializadoe
 const autoLaunch = require('./auto-launch');
-// trata os eventos squirrel
-const squirrelEvent = require('./squirrel-event');
 
 // informa que o app esta inicializando
 log.info('App starting...');
-
-// trata os eventos squirrel, caso tenha
-squirrelEvent();
 
 // inicializa o auto inicializador
 autoLaunch();
