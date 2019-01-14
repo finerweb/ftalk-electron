@@ -110,6 +110,11 @@ const onForceReset = () => {
 	electron.webContents.getAllWebContents().forEach(wc => wc.send('on-force-reset'));
 }
 
+const onAbrirDevTools = () => {
+	electron.webContents.getAllWebContents().forEach(wc => wc.send('on-dev-tools'));
+	mainWindow.openDevTools();
+}
+
 /**
  * Efetua a criação do menu do app
  */
@@ -117,9 +122,10 @@ const createMenu = () => {
 	// efetua a criação de um novo menu no app
 	electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate([
 			{
-					label: 'Editar',
+					label: 'Opções',
 					submenu: [
-							{label: 'Forçar Reset do App', click: onForceReset},
+						{ label: 'Forçar Reset do App', click: onForceReset },
+						{ label: 'Abrir Dev Tools', click: onAbrirDevTools },
 					],
 			}
 	]));

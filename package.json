@@ -1,7 +1,7 @@
 {
   "name": "ftalk-electron",
   "productName": "FTALK",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Chat FTALK",
   "main": "index.js",
   "scripts": {

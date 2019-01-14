@@ -22,7 +22,6 @@ $webview.addEventListener('dom-ready', () => {
   setTimeout(() => {
     $loader.classList.add('loader-hide');
   }, 100);
-  $webview.openDevTools();
   // coleta a versão do chat
   let version = window.location.hash.substring(1);
   // atualiza a versão do chat no titulo da janela
@@ -30,12 +29,8 @@ $webview.addEventListener('dom-ready', () => {
   title = document.title
 });
 
-ipcRenderer.on('update-avaliable', function() {
-  document.title = (title||document.title)+' -> '+'Atualização Disponível';
-});
-
-ipcRenderer.on('update-complete', function() {
-  document.title = title;
+ipcRenderer.on('on-dev-tools', function () {
+  $webview.openDevTools();
 });
 
 ipcRenderer.on('message', function(event, message) {
