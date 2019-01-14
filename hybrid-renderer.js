@@ -42,7 +42,7 @@ ipcRenderer.on('message', function(event, message) {
   if(typeof message === 'object') {
     switch(message.type) {
       case 'update-progress':
-        document.title = (title||document.title)+' -> '+'Baixando ('+message.progress+'% - Velocidade: '+message.downloadRate+')';
+        document.title = (title||document.title)+' -> '+'Baixando ('+(message.progress).toFixed(2)+'% - Velocidade: '+(message.downloadRate).toFixed(2)+')';
       break;
       case 'update-available':
         document.title = (title||document.title)+' -> '+'Atualização Disponível';

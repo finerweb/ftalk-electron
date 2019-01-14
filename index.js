@@ -55,8 +55,8 @@ autoUpdater.on('error', (err) => {
 autoUpdater.on('download-progress', (progressObj) => {
 	electron.webContents.getAllWebContents().forEach(wc => wc.send('message', {
 		type: 'update-progress',
-		progress:progressObj.percent, 
-		downloadRate:progressObj.bytesPerSecond,
+		progress:parseFloat(progressObj.percent).toFixed(2), 
+		downloadRate:parseFloat(progressObj.bytesPerSecond/1024).toFixed(2),
 	}));
   // let log_message = "Download speed: " + progressObj.bytesPerSecond;
   // log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
