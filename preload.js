@@ -62,27 +62,23 @@ function setDockBadge(count) {
  * @param {String} sala_id Identificador da sala que gerou a notificação
  */
 async function notifyDesktop(title, body, sala_id) {
+  // limpa os listeners de eventos
+  notifier.removeAllListeners();
   // instancia as configurações da notificação
   const notificationSettings = {message: body, title: title, sound: true, timeout: 5, icon: icon};
   // se for windows
   if(process.platform === 'win32') {
     // deve aguardar uma resposta
     notificationSettings.wait = true;
-    // deve fechar a outra notificação
-    if (lastNotification) {
-      notificationSettings.remove = lastNotification;
-    }
     // se estiver em produção
     if(!isDev) {
       notificationSettings.appID = 'br.com.finer.ftalk';
     }
-    // atribui um novo id as configurações
-    notificationSettings.id = uuid();
   }
   // instancia uma notificação
   notifier.notify(notificationSettings);
   // ao clicar na notificação, abre a conversa
-  notifier.on('click', () => {
+  notifier.once('click', () => {
     // abre o chat, se estiver fechado.
     remote.app.focus();
     // se a plataforma for windows
@@ -93,8 +89,6 @@ async function notifyDesktop(title, body, sala_id) {
     // chama uma função do chat para abrir a sala
     window.Bridge.openRoom(sala_id);
   });
-  // atribui o id da notificação
-  lastNotification = notificationSettings.id;
 }
 
 // inicializa a ponte
