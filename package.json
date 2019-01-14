@@ -1,7 +1,7 @@
 {
   "name": "ftalk-electron",
   "productName": "FTALK",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Chat FTALK",
   "main": "index.js",
   "scripts": {
@@ -36,9 +36,7 @@
     "linux": {
       "icon":"build/1024x1024.png",
       "target": [
-        "AppImage",
-        "deb",
-        "rpm"
+        "AppImage"
       ],
       "category": "Utility"
     },
