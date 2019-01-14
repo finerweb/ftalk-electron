@@ -1,7 +1,7 @@
 {
   "name": "ftalk-electron",
   "productName": "FTALK",
-  "version": "1.2.1",
+  "version": "1.0.5",
   "description": "Chat FTALK",
   "main": "index.js",
   "scripts": {
@@ -13,17 +13,15 @@
     "pack-windows": "electron-packager . --platform=win32 --icon=assets/logo.ico --overwrite=true --out=dist",
     "installer-ios": "electron-installer-dmg ./dist/FTALK-darwin-x64/FTALK.app FTALK",
     "dist": "build",
-    "publish": "build --win -p always"
+    "publish": "build --win --mac -p always"
   },
   "author": "Giovanni Pucci <giobaer2011@live.com> (http://www.finer.com.br)",
   "license": "ISC",
   "build": {
     "appId": "br.com.finer.ftalk",
     "asar": true,
-    "files": [
-      "**/*"
-    ],
     "dmg": {
+      "icon": "build/icon.icns",
       "contents": [
         {
           "x": 110,
@@ -50,8 +48,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "GioB2",
-        "repo": "ftalk-test"
+        "owner": "giovanni-finer",
+        "repo": "ftalk-electron"
       }
     ]
   },

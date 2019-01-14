@@ -24,10 +24,12 @@ autoUpdater.logger.transports.file.level = 'info';
 // informa que o app esta inicializando
 log.info('App starting...');
 
-// this should be placed at top of main.js to handle setup events quickly
-if (handleSquirrelEvent(app)) {
-	// squirrel event handled and app will exit in 1000ms, so don't do anything else
-	return;
+if(process.platform === 'win32') {
+	// this should be placed at top of main.js to handle setup events quickly
+	if (handleSquirrelEvent(app)) {
+		// squirrel event handled and app will exit in 1000ms, so don't do anything else
+		return;
+	}
 }
 
 var updating = false;
@@ -129,6 +131,7 @@ const createMenu = () => {
 const createWindow = () => {
 	// instancia as configurações da janela
 	const windowSettings = {
+		name: 'FTALK',
 		minWidth:800, 
 		minHeight:600,
 		icon: path.join(__dirname, 'build', 'icon.ico')
