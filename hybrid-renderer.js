@@ -46,11 +46,6 @@ ipcRenderer.on('message', function(event, message) {
         document.title = title;
       break;
     }
-  } else {
-    var $container = document.getElementById('messages');
-    var $message = document.createElement('div');
-    $message.innerHTML = message;
-    $container.appendChild($message);
-    console.log('e', event, message);
   }
+  console.log('e', event, message);
 });
