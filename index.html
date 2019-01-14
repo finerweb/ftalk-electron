@@ -1,0 +1,62 @@
+<html>
+<head>
+  <title>Finer FTALK</title>
+  <link rel="shortcut icon" type="image/png" href="assets/logo.png"/>
+  <style>
+    body {
+      font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+      font-size: 16px;
+      margin: 0;
+      position: relative;
+    }
+    webview {
+      height: 100%;
+      width: 100%;
+    }
+    webview.hide {
+      flex: 0 1;
+      width: 0px;
+      height: 0px;
+    }
+    .loader {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      color: rgba(0, 0, 0, 0.7);
+    }
+    .loader-hide {
+      display: none;
+    }
+    .updater {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 40px;
+      overflow: auto;
+      background: #ddd;
+      z-index: 1000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="loader"><h1>Carregando...</h1></div>
+
+  <div class="updater">
+    <p id="version"></p>
+    <div id="messages"></div>
+  </div>
+
+  <webview class="hide" preload="./preload.js" src="https://ftalk-front.finercloud.com/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaXN0ZW1hX2lkIjo5OCwidXN1YXJpb19pZCI6NDAzLCJlbWFpbCI6ImVyaWNrc29uLnR1bGlvQGZpbmVyLmNvbS5iciIsIndlYiI6dHJ1ZSwiaWF0IjoxNTQ3NDAwNzUxfQ.F2YmVvHQV1fsNDNZsNGIUql-fl9MS6Sn3qx_fp4TtyU"></webview>
+
+  <script>require('./hybrid-renderer');</script>
+
+</body>
+
+</html>
