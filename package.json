@@ -15,7 +15,8 @@
     "dist": "build",
     "publish": "build --win --mac -p always",
     "publish-windows": "build --win -p always",
-    "publish-mac": "build --mac -p always"
+    "publish-mac": "build --mac -p always",
+    "publish-linux": "build --linux -p always"
   },
   "author": "Giovanni Pucci <giobaer2011@live.com> (http://www.finer.com.br)",
   "license": "ISC",
@@ -39,8 +40,7 @@
     },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        "rpm"
       ]
     },
     "win": {
