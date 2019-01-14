@@ -1,7 +1,7 @@
 {
   "name": "ftalk-electron",
   "productName": "FTALK",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Chat FTALK",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "pack-windows": "electron-packager . --platform=win32 --icon=assets/logo.ico --overwrite=true --out=dist",
     "installer-ios": "electron-installer-dmg ./dist/FTALK-darwin-x64/FTALK.app FTALK",
     "dist": "build",
-    "publish": "build --win --mac -p always",
+    "publish": "build --win --mac --linux -p always",
     "publish-windows": "build --win -p always",
     "publish-mac": "build --mac -p always",
     "publish-linux": "build --linux -p always"
@@ -39,9 +39,13 @@
       ]
     },
     "linux": {
+      "icon":"build/1024x1024.png",
       "target": [
+        "AppImage",
+        "deb",
         "rpm"
-      ]
+      ],
+      "category": "Utility"
     },
     "win": {
       "target": "NSIS",

@@ -62,74 +62,39 @@ function setDockBadge(count) {
  * @param {String} sala_id Identificador da sala que gerou a notificação
  */
 async function notifyDesktop(title, body, sala_id) {
-  new Notification(title, {body});
+  // instancia as configurações da notificação
   const notificationSettings = {message: body, title: title, sound: true, timeout: 5, icon: icon};
+  // se for windows
   if(process.platform === 'win32') {
+    // deve aguardar uma resposta
     notificationSettings.wait = true;
-    if(!isDev) {
-      notificationSettings.appID = 'br.com.finer.ftalk';
-    }
+    // deve fechar a outra notificação
     if (lastNotification) {
       notificationSettings.remove = lastNotification;
     }
-    notificationSettings.id = lastNotification + 1; 
-    let notification = new notifier.WindowsToaster({}).notify(notificationSettings, (err, response) => {
-      console.log(err, response);
-    })
-    lastNotification = notificationSettings.id;
-    console.log(lastNotification);
+    // se estiver em produção
+    if(!isDev) {
+      notificationSettings.appID = 'br.com.finer.ftalk';
+    }
+    // atribui um novo id as configurações
+    notificationSettings.id = uuid();
   }
-  // let current_notification_id = lastNotification + 1;
-  // notifier.notify({id:lastNotification, remove:lastNotification}, (err, response) => {
-  //   console.log(err, response);
-  //   // instancia as configurações da notificação
-  //   const notificationSettings = {message: body, title: title, sound: true, timeout: 5, icon: icon};
-  //   // se for windows
-  //   if(process.platform === 'win32') {
-  //     // deve aguardar uma resposta
-  //     notificationSettings.wait = true;
-  //     if(!isDev) {
-  //       notificationSettings.appID = 'br.com.finer.ftalk';
-  //     }
-  //     // deve fechar a outra notificação
-  //     if (lastNotification) {
-  //       // notificationSettings.remove = lastNotification;
-  //     }
-  //     // atribui um novo id as configurações
-  //     notificationSettings.id = current_notification_id;
-  //     // efetua a notificação
-  //   }
-  //   notifier.notify(notificationSettings);
-  // })
-  // lastNotification = current_notification_id;
-  // // instancia uma notificação
-  // notifier.notify(notificationSettings, (err, response) => {
-  //   if(err) {
-  //     if(notificationAttempts < 2) {
-  //       lastNotification = 0;
-  //       notifyDesktop(title, body, sala_id);
-  //       notificationAttempts += 1;
-  //     }
-  //     console.error(current_notification_id, err);
-  //   } else {
-  //     notificationAttempts = 0;
-  //   }
-  //   console.log(current_notification_id, response);
-  // });
-  // // ao clicar na notificação, abre a conversa
-  // notifier.once('click', () => {
-  //   // abre o chat, se estiver fechado.
-  //   remote.app.focus();
-  //   // se a plataforma for windows
-  //   if(process.platform === 'win32') {
-  //     // envia uma mensagem solicitando foco na tela
-  //     ipc.send('window-focus');
-  //   }
-  //   // chama uma função do chat para abrir a sala
-  //   window.Bridge.openRoom(sala_id);
-  // });
-  // // atribui o id da notificação
-  // lastNotification = current_notification_id;
+  // instancia uma notificação
+  notifier.notify(notificationSettings);
+  // ao clicar na notificação, abre a conversa
+  notifier.on('click', () => {
+    // abre o chat, se estiver fechado.
+    remote.app.focus();
+    // se a plataforma for windows
+    if(process.platform === 'win32') {
+      // envia uma mensagem solicitando foco na tela
+      ipc.send('window-focus');
+    }
+    // chama uma função do chat para abrir a sala
+    window.Bridge.openRoom(sala_id);
+  });
+  // atribui o id da notificação
+  lastNotification = notificationSettings.id;
 }
 
 // inicializa a ponte
