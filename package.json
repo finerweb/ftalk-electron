@@ -47,7 +47,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "giovanni-finer",
+        "owner": "finerweb",
         "repo": "ftalk-electron"
       }
     ]
