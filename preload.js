@@ -25,12 +25,22 @@ function init() {
   window.Bridge = {
     setDockBadge: setDockBadge,
     notifyDesktop: notifyDesktop,
+    setActive: setActive,
+    setInactive: setInactive,
   };
 
   // we get this message from the main process
   ipc.on('on-force-reset', () => {
     window.Bridge.forceReset();
   });
+}
+
+function setActive() {
+  ipc.sendSync('set-active')
+}
+
+function setInactive() {
+  ipc.sendSync('set-inactive')
 }
 
 /**
