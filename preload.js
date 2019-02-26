@@ -36,12 +36,12 @@ function init() {
 
   // we get this message from the main process
   ipc.on('on-active', () => {
-    window.Bridge.emitActive();
+    window.Bridge.emitActive && window.Bridge.emitActive();
   });
 
   // we get this message from the main process
   ipc.on('on-inactive', () => {
-    window.Bridge.emitInactive();
+    window.Bridge.emitInactive && window.Bridge.emitInactive();
   });
 }
 
