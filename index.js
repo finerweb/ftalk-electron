@@ -17,7 +17,7 @@ const autoLaunch = require('./auto-launch');
 // verifica se o desktop está inativo
 const desktopIddle = require('desktop-idle');
 // define um tempo para inatividade do usuário
-const AWAY_TIMEOUT = 5000;
+const AWAY_TIMEOUT = 1800;
 // define se está ausente ou não
 var away = false;
 // define um controlador do timeout
@@ -120,7 +120,7 @@ const createWindow = () => {
 			// se estiver inativo por um tempo maior do que definido e estiver ativo
 		} else if(desktopIddle.getIdleTime() > AWAY_TIMEOUT && !away) {
 			// informa as telas de que o usuário está ausente
-			electron.webContents.getAllWebContents().forEach(wc => wc.send('on-active'));
+			electron.webContents.getAllWebContents().forEach(wc => wc.send('on-inactive'));
 		}
 	}, 1000);
 }
@@ -130,7 +130,7 @@ electron.ipcMain.on('set-active', () => {
 })
 
 electron.ipcMain.on('set-inactive', () => {
-	away = false;
+	away = true;
 })
 
 // quando o electron estiver pronto, inicializa a janela

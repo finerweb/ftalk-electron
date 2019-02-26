@@ -33,14 +33,24 @@ function init() {
   ipc.on('on-force-reset', () => {
     window.Bridge.forceReset();
   });
+
+  // we get this message from the main process
+  ipc.on('on-active', () => {
+    window.Bridge.emitActive();
+  });
+
+  // we get this message from the main process
+  ipc.on('on-inactive', () => {
+    window.Bridge.emitInactive();
+  });
 }
 
-function setActive() {
-  ipc.sendSync('set-active')
+async function setActive() {
+  await ipc.send('set-active')
 }
 
-function setInactive() {
-  ipc.sendSync('set-inactive')
+async function setInactive() {
+  await ipc.send('set-inactive')
 }
 
 /**
