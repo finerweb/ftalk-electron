@@ -25,12 +25,32 @@ function init() {
   window.Bridge = {
     setDockBadge: setDockBadge,
     notifyDesktop: notifyDesktop,
+    setActive: setActive,
+    setInactive: setInactive,
   };
 
   // we get this message from the main process
   ipc.on('on-force-reset', () => {
     window.Bridge.forceReset();
   });
+
+  // we get this message from the main process
+  ipc.on('on-active', () => {
+    window.Bridge.emitActive();
+  });
+
+  // we get this message from the main process
+  ipc.on('on-inactive', () => {
+    window.Bridge.emitInactive();
+  });
+}
+
+async function setActive() {
+  await ipc.send('set-active')
+}
+
+async function setInactive() {
+  await ipc.send('set-inactive')
 }
 
 /**
