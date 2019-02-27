@@ -14,8 +14,6 @@ const log = require('electron-log');
 const autoUpdate = require('./auto-updater');
 // auto inicializadoe
 const autoLaunch = require('./auto-launch');
-// verifica se o desktop está inativo
-const desktopIddle = require('desktop-idle');
 // define um tempo para inatividade do usuário
 const AWAY_TIMEOUT = 1800;
 // define se está ausente ou não
@@ -113,15 +111,18 @@ const createWindow = () => {
 	clearInterval(away_interval);
 	// verifica de 1 em 1 segundo se o usuário está ativo
 	away_interval = setInterval(() => {
-		// se o usuário estiver ativo em um tempo menor do que definido e estiver ausente
-		if(desktopIddle.getIdleTime() < AWAY_TIMEOUT && away) {
-			// informa as telas de que o usuário está ativo
-			electron.webContents.getAllWebContents().forEach(wc => wc.send('on-active'));
-			// se estiver inativo por um tempo maior do que definido e estiver ativo
-		} else if(desktopIddle.getIdleTime() > AWAY_TIMEOUT && !away) {
-			// informa as telas de que o usuário está ausente
-			electron.webContents.getAllWebContents().forEach(wc => wc.send('on-inactive'));
-		}
+		// monitora a atividade do usuário
+		electron.powerMonitor.querySystemIdleTime(time => {
+			// se o usuário estiver ativo em um tempo menor do que definido e estiver ausente
+			if(time < AWAY_TIMEOUT && away) {
+				// informa as telas de que o usuário está ativo
+				electron.webContents.getAllWebContents().forEach(wc => wc.send('on-active'));
+				// se estiver inativo por um tempo maior do que definido e estiver ativo
+			} else if(time > AWAY_TIMEOUT && !away) {
+				// informa as telas de que o usuário está ausente
+				electron.webContents.getAllWebContents().forEach(wc => wc.send('on-inactive'));
+			}
+		});
 	}, 1000);
 }
 

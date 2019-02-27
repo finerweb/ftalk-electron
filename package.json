@@ -1,7 +1,7 @@
 {
   "name": "ftalk-electron",
   "productName": "FTALK",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "Chat FTALK",
   "main": "index.js",
   "scripts": {
@@ -41,7 +41,15 @@
       "category": "Utility"
     },
     "win": {
-      "target": "NSIS",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
       "icon": "build/icon.ico"
     },
     "publish": [
@@ -62,7 +70,6 @@
   },
   "dependencies": {
     "auto-launch": "5.0.5",
-    "desktop-idle": "^1.1.2",
     "electron-is-dev": "^1.0.1",
     "electron-log": "2.2.17",
     "electron-updater": "4.0.6",
