@@ -14,6 +14,8 @@ const log = require('electron-log');
 const autoUpdate = require('./auto-updater');
 // auto inicializadoe
 const autoLaunch = require('./auto-launch');
+// controlador de download
+const DownloadManager = require("electron-download-manager");
 // define um tempo para inatividade do usuário
 const AWAY_TIMEOUT = 1800;
 // define se está ausente ou não
@@ -72,6 +74,12 @@ const createMenu = () => {
 		}
 	]));
 }
+
+/** registra o caminho de download */
+DownloadManager.register({
+	/** caminho de download */
+	downloadFolder: app.getPath("downloads") + "/ftalk-arquivos",
+});
 
 /**
  * Efetua a criação de uma nova janela do chat
@@ -133,6 +141,33 @@ electron.ipcMain.on('set-active', () => {
 electron.ipcMain.on('set-inactive', () => {
 	away = true;
 })
+
+/**
+ * Executa a funcionalidade de baixar o arquivo quando solicitado pelo processo.
+ */
+electron.ipcMain.on('download-file', (e, mensagem_id, url) => {
+	/** efetua o download do arquivo */
+	DownloadManager.download({
+		/** url remota a ser baixada */
+		url: url,
+		/** sempre ao atualizar o download */
+		onProgress: (progress) => {
+			/** atualizar o progresso do app */
+			electron.webContents.getAllWebContents().forEach(wc => wc.send('on-download-progress', mensagem_id, progress));
+		},
+	}, (error, info) => {
+		/** se tiver erro */
+		if (error) {
+			/** informa o erro */
+			console.log(error);
+		} else {
+			/** efetua a abertura */
+			electron.shell.showItemInFolder(info.filePath);
+		}
+		/** informa o app que o download terminou */
+		electron.webContents.getAllWebContents().forEach(wc => wc.send('on-download-finished', mensagem_id, error, info));
+	});
+});
 
 // quando o electron estiver pronto, inicializa a janela
 app.on('ready', createWindow);

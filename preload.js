@@ -11,11 +11,6 @@ const isDev = require('electron-is-dev');
 // caminho para o icone
 const icon = path.join(__dirname, 'assets/logo.png');
 
-const uuid = require('uuid/v1');
-
-var lastNotification = 0;
-var notificationAttempts = [];
-
 /**
  * Inicializa as funcionalidades do webview do app
  */
@@ -27,6 +22,7 @@ function init() {
     notifyDesktop: notifyDesktop,
     setActive: setActive,
     setInactive: setInactive,
+    downloadFile: downloadFile,
   };
 
   // we get this message from the main process
@@ -43,6 +39,18 @@ function init() {
   ipc.on('on-inactive', () => {
     window.Bridge.emitInactive && window.Bridge.emitInactive();
   });
+
+  // we get this message from the main process
+  ipc.on('on-download-progress', (e, mensagem_id, progress) => {
+    /** chama a função do site para atualizar o progresso */
+    window.Bridge.updateProgress && window.Bridge.updateProgress(mensagem_id, progress);
+  });
+
+  // we get this message from the main process
+  ipc.on('on-download-finished', (e, mensagem_id, error, info) => {
+    /** chama a função do site para atualizar o progresso */
+    window.Bridge.finishDownload && window.Bridge.finishDownload(mensagem_id, error, info);
+  });
 }
 
 async function setActive() {
@@ -51,6 +59,15 @@ async function setActive() {
 
 async function setInactive() {
   await ipc.send('set-inactive')
+}
+
+/**
+ * Efetua o download do arquivo
+ * @param {String} url
+ */
+async function downloadFile(mensagem_id, url) {
+  /** chama o evento para efetuar o download do arquivo no processo principal */
+  await ipc.send('download-file', mensagem_id, url);
 }
 
 /**
