@@ -243,21 +243,6 @@ app.on('close', function (event) {
     return false;
 });
 
-// // fecha o app quando todas as janelas forem fechadas
-// app.on('window-all-closed', (event) => {
-	
-// 	// event.preventDefault();
-// 	// app.hide();
-	
-
-// 	// return false;
-// 	// no OSX, o app só fecha quando o usuário manualmente fechar o app.
-// 	if (process.platform !== 'darwin') {
-// 		// em outras plataformas, fecha normalmente
-// 		app.quit();
-// 	}
-// });
-
 // ao abrir o app novamente, se não tiver nenhuma janela aberta, cria ela novamente.
 app.on('activate', function () {
 	// se não tiver nenhuma janela
