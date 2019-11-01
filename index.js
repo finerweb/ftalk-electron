@@ -154,15 +154,10 @@ const createWindow = () => {
 	mainWindow.loadURL(path.join('file://', __dirname, `index.html#${app.getVersion()}`));
 	// quando a janela for fechada
 	mainWindow.on('close', (event) => {
-		
-			event.preventDefault();
-			mainWindow.hide();
-		
-	
+		event.preventDefault();
+		mainWindow.hide();
 		return false;
 	});
-	
-
 	// caso solicite o foco na janela
 	electron.ipcMain.on('window-focus', () => {
 		// windows
