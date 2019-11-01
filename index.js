@@ -10,6 +10,8 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 // logger de atualização
 const log = require('electron-log');
+// modulo para verificar a plataforma
+const platform = require('os').platform()
 // atualizador
 const autoUpdate = require('./auto-updater');
 // auto inicializadoe
@@ -23,11 +25,25 @@ var away = false;
 // define um controlador do timeout
 var away_interval = null;
 
+// Módulos para lidar da minimizaçao do tray
+const Menu = electron.Menu
+const Tray = electron.Tray
 // informa que o app esta inicializando
 log.info('App starting...');
 
 // inicializa o auto inicializador
 autoLaunch();
+
+// Instancia inicialmente os icones
+var trayIcon = null
+var appIcon = null
+
+// Determina o icone do tray
+if (platform == 'darwin') {
+	trayIcon = path.join(__dirname, 'assets', 'logo.png')
+} else if (platform == 'win32') {
+		trayIcon = path.join(__dirname, 'assets', 'logo.ico')
+	}
 
 // manter mainWindow sempre global
 var mainWindow;
@@ -90,8 +106,43 @@ const createWindow = () => {
 		name: 'FTALK',
 		minWidth:800, 
 		minHeight:600,
-		icon: path.join(__dirname, 'build', 'icon.ico')
+		icon: trayIcon,
 	};
+	// cria o icone para o tray
+	appIcon = new Tray(trayIcon)
+
+	// Cria contexto de menu "RightClick" para tray icon
+	// Possui dois eventos - 'Restaurar' e 'Sair'
+	const contextMenu = Menu.buildFromTemplate([
+		{
+			label: 'Abrir',
+			click: () => {
+				mainWindow.show()
+			}
+		},
+		{
+			label: 'Sair',
+			click: () => {
+				mainWindow.close()
+			}
+		}
+	])
+
+	// Seta titulo para o tray
+	appIcon.setTitle('FTalk')
+
+	// Seta toot tip para o tray
+	appIcon.setToolTip('FTalk')
+  
+	// Cria contexto RightClick no menu
+	appIcon.setContextMenu(contextMenu)
+  
+	// Restaurar (abrir) após clicar no ícone
+	// se já estiver aberta, minimiza ela para o tray
+	appIcon.on('click', () => {
+	  mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+	})
+
 	// cria a janela, baseada nas configurações
 	mainWindow = new BrowserWindow(windowSettings);
 	// se a plataforma for windows
@@ -102,10 +153,16 @@ const createWindow = () => {
 	// carrega o arquivo index do app
 	mainWindow.loadURL(path.join('file://', __dirname, `index.html#${app.getVersion()}`));
 	// quando a janela for fechada
-	mainWindow.on('closed', () => {
-		// efetua o fechamento do app
-		mainWindow = null;
+	mainWindow.on('close', (event) => {
+		
+			event.preventDefault();
+			mainWindow.hide();
+		
+	
+		return false;
 	});
+	
+
 	// caso solicite o foco na janela
 	electron.ipcMain.on('window-focus', () => {
 		// windows
