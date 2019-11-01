@@ -224,18 +224,22 @@ electron.ipcMain.on('download-file', (e, mensagem_id, url) => {
 // quando o electron estiver pronto, inicializa a janela
 app.on('ready', createWindow);
 
+// quando minimizar a aplicação apenas esconde
 app.on('minimize',function(event){
-    event.preventDefault();
-    app.hide();
+	// previne que a aplicação seja minimizada
+	event.preventDefault();
+	// escode a aplicação
+	app.hide();
 });
 
+// quando for para fechar a aplicação
 app.on('close', function (event) {
-    
-        event.preventDefault();
-        app.hide();
-    
-
-    return false;
+	// previne que a aplicação feche
+	event.preventDefault();
+	// esconde a aplicação
+	app.hide();
+	// informa que não fechou
+	return false;
 });
 
 // ao abrir o app novamente, se não tiver nenhuma janela aberta, cria ela novamente.
