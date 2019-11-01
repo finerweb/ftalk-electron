@@ -172,14 +172,34 @@ electron.ipcMain.on('download-file', (e, mensagem_id, url) => {
 // quando o electron estiver pronto, inicializa a janela
 app.on('ready', createWindow);
 
-// fecha o app quando todas as janelas forem fechadas
-app.on('window-all-closed', () => {
-	// no OSX, o app só fecha quando o usuário manualmente fechar o app.
-	if (process.platform !== 'darwin') {
-		// em outras plataformas, fecha normalmente
-		app.quit();
-	}
+app.on('minimize',function(event){
+    event.preventDefault();
+    app.hide();
 });
+
+app.on('close', function (event) {
+    
+        event.preventDefault();
+        app.hide();
+    
+
+    return false;
+});
+
+// // fecha o app quando todas as janelas forem fechadas
+// app.on('window-all-closed', (event) => {
+	
+// 	// event.preventDefault();
+// 	// app.hide();
+	
+
+// 	// return false;
+// 	// no OSX, o app só fecha quando o usuário manualmente fechar o app.
+// 	if (process.platform !== 'darwin') {
+// 		// em outras plataformas, fecha normalmente
+// 		app.quit();
+// 	}
+// });
 
 // ao abrir o app novamente, se não tiver nenhuma janela aberta, cria ela novamente.
 app.on('activate', function () {

@@ -46,9 +46,41 @@
 
 <body>
 
+  <script type = "text/javascript">
+    const {remote} = require('electron')
+    const {Tray, Menu} = remote
+    const path = require('path')
+
+    let trayIcon = new Tray(path.join(__dirname, 'assets', 'logo.png'))
+
+    const trayMenuTemplate = [
+       {
+          label: 'Empty Application',
+          enabled: false
+       },
+       
+       {
+          label: 'Settings',
+          click: function () {
+             console.log("Clicked on settings")
+          }
+       },
+       
+       {
+          label: 'Help',
+          click: function () {
+             console.log("Clicked on Help")
+          }
+       }
+    ]
+    
+    let trayMenu = Menu.buildFromTemplate(trayMenuTemplate)
+    trayIcon.setContextMenu(trayMenu)
+  </script>
+  
   <div class="loader"><h1>Carregando...</h1></div>
 
-  <webview class="hide" preload="./preload.js" src="https://ftalk-front.finercloud.com"></webview>
+  <webview class="hide" preload="./preload.js" src="http://192.168.10.68:3000"></webview>
 
   <script>require('./hybrid-renderer');</script>
 
