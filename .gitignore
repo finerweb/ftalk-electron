@@ -2,3 +2,4 @@ node_modules
 dist
 installers
 FTALK_DEV.provisionprofile
+.DS_Store
