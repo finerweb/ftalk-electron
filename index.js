@@ -119,13 +119,13 @@ const createWindow = () => {
 			{
 				label: 'Abrir',
 				click: () => {
-					mainWindow.show()
+					mainWindow.show();
 				}
 			},
 			{
 				label: 'Sair',
 				click: () => {
-					mainWindow.close()
+					app.exit(0);
 				}
 			}
 		])
@@ -142,7 +142,7 @@ const createWindow = () => {
 		// Restaurar (abrir) após clicar no ícone
 		// se já estiver aberta, minimiza ela para o tray
 		appIcon.on('click', () => {
-		mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+			mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
 		})
 	}
 
