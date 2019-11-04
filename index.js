@@ -108,40 +108,43 @@ const createWindow = () => {
 		minHeight:600,
 		icon: trayIcon,
 	};
-	// cria o icone para o tray
-	appIcon = new Tray(trayIcon)
+		
+	if (process.platform !== 'darwin'){
+		// cria o icone para o tray
+		appIcon = new Tray(trayIcon)
 
-	// Cria contexto de menu "RightClick" para tray icon
-	// Possui dois eventos - 'Restaurar' e 'Sair'
-	const contextMenu = Menu.buildFromTemplate([
-		{
-			label: 'Abrir',
-			click: () => {
-				mainWindow.show()
+		// Cria contexto de menu "RightClick" para tray icon
+		// Possui dois eventos - 'Restaurar' e 'Sair'
+		const contextMenu = Menu.buildFromTemplate([
+			{
+				label: 'Abrir',
+				click: () => {
+					mainWindow.show()
+				}
+			},
+			{
+				label: 'Sair',
+				click: () => {
+					mainWindow.close()
+				}
 			}
-		},
-		{
-			label: 'Sair',
-			click: () => {
-				mainWindow.close()
-			}
-		}
-	])
+		])
 
-	// Seta titulo para o tray
-	appIcon.setTitle('FTalk')
+		// Seta titulo para o tray
+		appIcon.setTitle('FTalk')
 
-	// Seta toot tip para o tray
-	appIcon.setToolTip('FTalk')
-  
-	// Cria contexto RightClick no menu
-	appIcon.setContextMenu(contextMenu)
-  
-	// Restaurar (abrir) após clicar no ícone
-	// se já estiver aberta, minimiza ela para o tray
-	appIcon.on('click', () => {
-	  mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
-	})
+		// Seta toot tip para o tray
+		appIcon.setToolTip('FTalk')
+	
+		// Cria contexto RightClick no menu
+		appIcon.setContextMenu(contextMenu)
+	
+		// Restaurar (abrir) após clicar no ícone
+		// se já estiver aberta, minimiza ela para o tray
+		appIcon.on('click', () => {
+		mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+		})
+	}
 
 	// cria a janela, baseada nas configurações
 	mainWindow = new BrowserWindow(windowSettings);
@@ -153,10 +156,18 @@ const createWindow = () => {
 	// carrega o arquivo index do app
 	mainWindow.loadURL(path.join('file://', __dirname, `index.html#${app.getVersion()}`));
 	// quando a janela for fechada
+
 	mainWindow.on('close', (event) => {
-		event.preventDefault();
-		mainWindow.hide();
-		return false;
+		if (process.platform !== 'darwin') {
+			event.preventDefault();
+			mainWindow.hide();
+			return false;
+		}
+	});
+	// quando a janela for fechada
+	mainWindow.on('closed', () => {
+		// efetua o fechamento do app
+		mainWindow = null;
 	});
 	// caso solicite o foco na janela
 	electron.ipcMain.on('window-focus', () => {
@@ -224,6 +235,12 @@ electron.ipcMain.on('download-file', (e, mensagem_id, url) => {
 // quando o electron estiver pronto, inicializa a janela
 app.on('ready', createWindow);
 
+// fecha o app quando todas as janelas forem fechadas
+app.on('window-all-closed', (event) => {
+	event.preventDefault();
+	app.hide();
+	return false;
+});
 // quando minimizar a aplicação apenas esconde
 app.on('minimize',function(event){
 	// previne que a aplicação seja minimizada
