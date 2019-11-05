@@ -109,7 +109,7 @@ const createWindow = () => {
 		icon: trayIcon,
 	};
 		
-	if (process.platform !== 'darwin'){
+	if (process.platform !== 'darwin' && process.platform !== 'linux'){
 		// cria o icone para o tray
 		appIcon = new Tray(trayIcon)
 
